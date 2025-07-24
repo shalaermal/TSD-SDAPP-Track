@@ -1,7 +1,17 @@
-const teamMembers = [
-  "Fitim Ahmeti", "Shpend Ajeti", "Festim Asllani", "Tim Corey",
-  "Vlora Ibrahimi", "Vanja Petrushevski", "Edi Sermaxhaj", "Ermal Shala"
-];
+const teamMapping = {
+  "FTTT Team": [
+    "Fitim Ahmeti", "Shpend Ajeti", "Festim Asllani", "Tim Corey",
+    "Vlora Ibrahimi", "Vanja Petrushevski"
+  ],
+  "Data Team": [
+    "Edi Sermaxhaj", "Ermal Shala", "Drinisa Kabashi", "Daisy Prasad"
+  ],
+  "CDE Team": [
+    "Berat Gubavci", "Besar Ahmeti", "Carlos Brown", "Christopher Pears"
+  ]
+};
+
+let allData = [];
 
 document.getElementById("csvFile").addEventListener("change", handleFile);
 document.getElementById("monthFilter").addEventListener("change", () => {
@@ -13,9 +23,11 @@ document.getElementById("yearFilter").addEventListener("change", () => {
   renderTable();
 });
 document.getElementById("dayFilter").addEventListener("change", renderTable);
+document.getElementById("teamFilter").addEventListener("change", () => {
+  populateMemberDropdown();
+  renderTable();
+});
 document.getElementById("memberFilter").addEventListener("change", renderTable);
-
-let allData = [];
 
 function handleFile(event) {
   const file = event.target.files[0];
@@ -39,7 +51,6 @@ function handleFile(event) {
 function getSelectedYear() {
   return document.getElementById("yearFilter").value;
 }
-
 function getSelectedMonth() {
   return document.getElementById("monthFilter").value;
 }
@@ -48,9 +59,7 @@ function populateYearDropdown(data) {
   const yearSet = new Set();
   data.forEach(row => {
     const date = new Date(row["Actual Complete Date"]);
-    if (!isNaN(date)) {
-      yearSet.add(date.getFullYear());
-    }
+    if (!isNaN(date)) yearSet.add(date.getFullYear());
   });
 
   const sortedYears = Array.from(yearSet).sort((a, b) => b - a);
@@ -65,9 +74,7 @@ function populateYearDropdown(data) {
   });
 
   const currentYear = new Date().getFullYear();
-  if (yearSet.has(currentYear)) {
-    yearFilter.value = currentYear;
-  }
+  if (yearSet.has(currentYear)) yearFilter.value = currentYear;
 }
 
 function populateMonthDropdown(data) {
@@ -125,10 +132,22 @@ function populateDayDropdown(data, selectedYear, selectedMonth) {
 }
 
 function populateMemberDropdown() {
+  const selectedTeam = document.getElementById("teamFilter").value;
   const memberFilter = document.getElementById("memberFilter");
+  const memberSet = new Set();
+
+  allData.forEach(row => {
+    const rawName = row["Task Owner"];
+    const cleanName = rawName ? rawName.replace(/<.*?>/, "").trim() : "";
+    if (selectedTeam === "All" || teamMapping[selectedTeam]?.includes(cleanName)) {
+      memberSet.add(cleanName);
+    }
+  });
+
+  const sortedMembers = Array.from(memberSet).sort();
   memberFilter.innerHTML = '<option value="All">Show All</option>';
 
-  teamMembers.forEach(name => {
+  sortedMembers.forEach(name => {
     const option = document.createElement("option");
     option.value = name;
     option.textContent = name;
@@ -136,10 +155,12 @@ function populateMemberDropdown() {
   });
 }
 
+// FULL UPDATED renderTable FUNCTION
 function renderTable() {
   const selectedMonth = getSelectedMonth();
   const selectedYear = getSelectedYear();
   const selectedDay = document.getElementById("dayFilter").value;
+  const selectedTeam = document.getElementById("teamFilter").value;
   const selectedMember = document.getElementById("memberFilter").value;
   const container = document.getElementById("tableContainer");
   container.innerHTML = "";
@@ -152,11 +173,13 @@ function renderTable() {
     const yearMatch = date.getFullYear().toString() === selectedYear;
     const monthMatch = selectedMonth === "All" || monthLabel === selectedMonth;
     const dayMatch = selectedDay === "All" || date.getDate().toString().padStart(2, '0') === selectedDay;
-    const cleanOwner = (row["Task Owner"] || "Unassigned").replace(/<.*?>/, "").trim();
-    const memberMatch = selectedMember === "All"
-      ? teamMembers.includes(cleanOwner)
-      : cleanOwner === selectedMember;
-    return monthMatch && yearMatch && dayMatch && memberMatch;
+
+    const owner = row["Task Owner"] || "Unassigned";
+    const cleanOwner = owner.replace(/<.*?>/, "").trim();
+    const memberMatch = selectedMember === "All" ? true : cleanOwner === selectedMember;
+    const teamMatch = selectedTeam === "All" ? true : teamMapping[selectedTeam]?.includes(cleanOwner);
+
+    return monthMatch && yearMatch && dayMatch && memberMatch && teamMatch;
   });
 
   const grouped = {};
@@ -221,8 +244,6 @@ function renderTable() {
 
     const escalationTable = document.createElement("table");
     escalationTable.className = "task-table escalation-summary";
-    escalationTable.style.height = "auto";
-    escalationTable.style.maxHeight = "90px";
     escalationTable.innerHTML = `
       <thead><tr><th colspan="2">Escalation Orders</th></tr></thead>
       <tbody>
@@ -240,7 +261,6 @@ function renderTable() {
 
     const dayTable = document.createElement("table");
     dayTable.className = "task-table day-summary";
-    dayTable.style.maxHeight = "220px";
     dayTable.innerHTML = `<thead><tr><th>Date</th><th>Completed Tasks per Day</th><th>Limit > 6 per day</th></tr></thead>`;
     const dayBody = document.createElement("tbody");
 
@@ -254,12 +274,9 @@ function renderTable() {
 
     const rowWrapper = document.createElement("div");
     rowWrapper.className = "row-wrapper";
-
-    rowWrapper.appendChild(dayTable);          // Left side: Per-day Completion
-    rowWrapper.appendChild(escalationTable);   // Right side: Escalation Orders
-
+    rowWrapper.appendChild(dayTable);
+    rowWrapper.appendChild(escalationTable);
     content.appendChild(rowWrapper);
-
 
     const detailTable = document.createElement("table");
     detailTable.className = "task-table";

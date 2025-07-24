@@ -4,38 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SDAPP Task Tracker</title>
-
-  <!-- ✅ Favicon -->
   <link rel="icon" type="image/png" href="black-logo.png" />
-
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
   <h2>📊 Task Tracker</h2>
   <div class="controls">
-  <!-- First row: file input -->
-  <div class="control-row file-input-row">
-    <input type="file" id="csvFile" />
+    <div class="control-row file-input-row">
+      <input type="file" id="csvFile" />
+    </div>
+
+    <div class="control-row filters-row">
+      <label for="yearFilter">Filter by Year:</label>
+      <select id="yearFilter"></select>
+
+      <label for="monthFilter">Filter by Month:</label>
+      <select id="monthFilter"></select>
+
+      <label for="dayFilter">Filter by Day:</label>
+      <select id="dayFilter">
+        <option value="All">All Days</option>
+      </select>
+
+      <label for="teamFilter">Filter by Team:</label>
+      <select id="teamFilter">
+        <option value="All">All Teams</option>
+        <option value="FTTT Team">FTTT</option>
+        <option value="Data Team">Data</option>
+        <option value="CDE Team">CDE</option>
+      </select>
+
+      <label for="memberFilter">Filter by Team Member:</label>
+      <select id="memberFilter"></select>
+    </div>
   </div>
-
-  <!-- Second row: filters -->
-  <div class="control-row filters-row">
-    <label for="yearFilter">Filter by Year:</label>
-    <select id="yearFilter"></select>
-
-    <label for="monthFilter">Filter by Month:</label>
-    <select id="monthFilter"></select>
-
-    <label for="dayFilter">Filter by Day:</label>
-    <select id="dayFilter">
-      <option value="All">All Days</option>
-    </select>
-
-    <label for="memberFilter">Filter by Team Member:</label>
-    <select id="memberFilter"></select>
-  </div>
-</div>
 
   <div id="tableContainer"></div>
 
