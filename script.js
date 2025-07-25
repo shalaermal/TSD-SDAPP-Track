@@ -18,8 +18,8 @@ document.getElementById("yearFilter").addEventListener("change", () => {
 });
 document.getElementById("dayFilter").addEventListener("change", renderTable);
 
-// 👉 new event listener for team filter
 document.getElementById("teamFilter").addEventListener("change", () => {
+  // You can add a default month and year select logic here if needed
   renderTable();
 });
 
@@ -37,7 +37,6 @@ function handleFile(event) {
     populateMonthDropdown(allData);
     populateTeamDropdown();
     populateDayDropdown(allData, getSelectedYear(), getSelectedMonth());
-    renderTable();
   };
   reader.readAsText(file);
 }
