@@ -133,7 +133,16 @@ function populateTeamDropdown() {
   const teamFilter = document.getElementById("teamFilter");
   if (!teamFilter) return;
 
-  teamFilter.innerHTML = '<option value="All">All Teams</option>';
+  // Set "Select Team" as the initial option
+  teamFilter.innerHTML = '<option value="" disabled selected>Select team</option>';
+
+  // Add "All Teams" manually
+  const allOption = document.createElement("option");
+  allOption.value = "All";
+  allOption.textContent = "All Teams";
+  teamFilter.appendChild(allOption);
+
+  // Add actual teams from the mapping
   Object.keys(teamMapping).forEach(team => {
     const option = document.createElement("option");
     option.value = team;
@@ -141,6 +150,8 @@ function populateTeamDropdown() {
     teamFilter.appendChild(option);
   });
 }
+
+
 
 function renderTable() {
   const selectedMonth = getSelectedMonth();
