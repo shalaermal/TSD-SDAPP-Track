@@ -1,13 +1,14 @@
 const teamMapping = {
   "FTTT Team": [
     "Fitim Ahmeti", "Shpend Ajeti", "Festim Asllani", "Tim Corey",
-    "Vlora Ibrahimi", "Vanja Petrushevski"
+    "Vlora Ibrahimi", "Vanja Petrushevski", "Edi Sermaxhaj", "Ermal Shala"
   ],
   "Data Team": [
-    "Edi Sermaxhaj", "Ermal Shala", "Drinisa Kabashi", "Daisy Prasad"
+    "Berat Gubavci", "Besar Ahmeti", "Fitore Behrami", "Arlinda Neziri",
+    "Jetart Aliu", "Melos Doberdoli", "Genc Ajeti", "Lendrit Islami", "Furkan Mani", "Petar Siljanoski"
   ],
   "CDE Team": [
-    "Berat Gubavci", "Besar Ahmeti", "Carlos Brown", "Christopher Pears"
+     "Carlos Brown", "Christopher Pears"
   ]
 };
 
