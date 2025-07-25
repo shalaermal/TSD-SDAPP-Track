@@ -134,7 +134,8 @@ function populateTeamDropdown() {
   if (!teamFilter) return;
 
   // Set "Select Team" as the initial option
-  teamFilter.innerHTML = '<option value="" disabled selected>Select team</option>';
+  teamFilter.innerHTML = '<option value="" disabled selected>Select team<strong>*</strong></option>';
+
 
   // Add "All Teams" manually
   const allOption = document.createElement("option");
