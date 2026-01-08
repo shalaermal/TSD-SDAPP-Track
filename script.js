@@ -223,12 +223,12 @@ function renderTable() {
     let escalated = 0;
     let pickedAfterEscalation = 0;
 
-    tasks.forEach(row => {
-      const isEscalated = row["Escalated Task?"]?.toLowerCase() === "yes";
+    tasks.forEach(t => {
+      const isEscalated = ["Service Delivery Order - Escalated Order?", "Escalated Task?"].some(col => t[col]?.toLowerCase() === "yes");
       if (isEscalated) {
         escalated++;
-        const escalationDate = new Date(row["Task Escalation Time"]);
-        const assignmentDate = new Date(row["Task Assignment Date"]);
+        const escalationDate = new Date(t["Task Escalation Time"]);
+        const assignmentDate = new Date(t["Task Assignment Date"]);
         if (assignmentDate > escalationDate) pickedAfterEscalation++;
       }
     });
@@ -285,22 +285,23 @@ function renderTable() {
     `;
 
     const tbody = document.createElement("tbody");
-    tasks.forEach(row => {
-      const isEscalated = row["Escalated Task?"]?.toLowerCase() === "yes";
-      const escalationDate = new Date(row["Task Escalation Time"]);
-      const assignmentDate = new Date(row["Task Assignment Date"]);
+    tasks.forEach(t => {
+      const isEscalated = t["Escalated Task?"]?.toLowerCase() === "yes";
+      const escalationDate = new Date(t["Task Escalation Time"]);
+      const assignmentDate = new Date(t["Task Assignment Date"]);
       const isLate = isEscalated && assignmentDate > escalationDate;
+      const escValue = (Number(t["Service Delivery Order - Escalated Order?"]) || 0) + (Number(t["Escalated Task?"]) || 0);
 
       const tr = document.createElement("tr");
       if (isLate) tr.classList.add("taken-after-escalation");
 
       tr.innerHTML = `
-        <td>${row["Service Delivery Order - Customer PON"]}</td>
-        <td>${row["Task Type"]}</td>
-        <td>${row["Actual Complete Date"]}</td>
-        <td>${row["Escalated Task?"] || ""}</td>
-        <td>${row["Task Escalation Time"] || ""}</td>
-        <td>${row["Task Assignment Date"] || ""}</td>
+        <td>${t["Service Delivery Order - Customer PON"]}</td>
+        <td>${t["Task Type"]}</td>
+        <td>${t["Actual Complete Date"]}</td>
+        <td>${escValue || ""}</td>
+        <td>${t["Task Escalation Time"] || ""}</td>
+        <td>${t["Task Assignment Date"] || ""}</td>
       `;
       tbody.appendChild(tr);
     });
