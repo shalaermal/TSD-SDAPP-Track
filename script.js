@@ -286,10 +286,13 @@ function renderTable() {
 
     const tbody = document.createElement("tbody");
     tasks.forEach(t => {
-      const isEscalated = t["Escalated Task?"]?.toLowerCase() === "yes";
+      const isEscalated =(t["Escalated Task?"] || "").toLowerCase() === "yes" ||
+        (t["Service Delivery Order - Escalated Order?"] || "").toLowerCase() === "yes";
+
       const escalationDate = new Date(t["Task Escalation Time"]);
       const assignmentDate = new Date(t["Task Assignment Date"]);
       const isLate = isEscalated && assignmentDate > escalationDate;
+
       const escValue = (Number(t["Service Delivery Order - Escalated Order?"]) || 0) + (Number(t["Escalated Task?"]) || 0);
 
       const tr = document.createElement("tr");
@@ -299,7 +302,7 @@ function renderTable() {
         <td>${t["Service Delivery Order - Customer PON"]}</td>
         <td>${t["Task Type"]}</td>
         <td>${t["Actual Complete Date"]}</td>
-        <td>${escValue || ""}</td>
+        <td style="color:${isEscalated ? "red" : "inherit"}"> ${isEscalated ? "Yes" : "No"} </td>
         <td>${t["Task Escalation Time"] || ""}</td>
         <td>${t["Task Assignment Date"] || ""}</td>
       `;
