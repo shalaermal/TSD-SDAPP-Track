@@ -95,7 +95,6 @@ select {
   background-color: #f2f2f2;
 }
 
-/* Subtle red highlight for Total Completed row in first table */
 .highlight-total {
   background-color: #fce5e5;
   color: #222;
@@ -112,9 +111,9 @@ select {
 .row-wrapper {
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;  /* Align both items to the top */
+  align-items: flex-start;
   gap: 12px;
-  margin-bottom: 15px; /* 👈 Adds space below the whole row */
+  margin-bottom: 15px;
 }
 
 /* PER-DAY COMPLETION TABLE */
@@ -125,7 +124,7 @@ select {
   width: auto;
   min-width: 280px;
   margin: 0;
-  margin-bottom: 10px; /* 👈 Adds space below just the table */
+  margin-bottom: 10px;
   font-weight: bold;
 }
 
@@ -137,7 +136,7 @@ select {
 }
 
 .task-table.day-summary th {
-  background-color: #fadcbd;       /* Match Escalation Orders header */
+  background-color: #fadcbd;
   font-weight: bold;
   font-size: 15px;
   text-align: left;
@@ -156,7 +155,7 @@ select {
   font-size: 14px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   height: 100%;
-  align-self: flex-start; /* Make sure it aligns to the top */
+  align-self: flex-start;
   margin: 0;
 }
 
