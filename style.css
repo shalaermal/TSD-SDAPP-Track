@@ -189,3 +189,6 @@ select {
   align-self: flex-start;
 
 }
+.task-table td {
+  text-align: center;
+}
