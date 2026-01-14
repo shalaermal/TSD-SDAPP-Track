@@ -276,6 +276,7 @@ function renderTable() {
         <tr>
           <th>Order Name</th>
           <th>Task Type</th>
+          <th>Days to Complete</th>
           <th>Complete Date</th>
           <th>Escalated Task?</th>
           <th>Task Escalation Time</th>
@@ -298,9 +299,21 @@ function renderTable() {
       const tr = document.createElement("tr");
       if (isLate) tr.classList.add("taken-after-escalation");
 
+      const completeDate = new Date(t["Actual Complete Date"]);
+
+        let daysToComplete = "N/A";
+
+        if (!isNaN(assignmentDate) && !isNaN(completeDate)) {
+          const diffMs = completeDate - assignmentDate;
+          daysToComplete = diffMs >= 0
+            ? Math.ceil(diffMs / (1000 * 60 * 60 * 24))
+            : "N/A";
+        }
+
       tr.innerHTML = `
         <td>${t["Service Delivery Order - Customer PON"]}</td>
         <td>${t["Task Type"]}</td>
+        <td>${daysToComplete}</td>
         <td>${t["Actual Complete Date"]}</td>
         <td style="color:${isEscalated ? "red" : "inherit"}"> ${isEscalated ? "Yes" : "No"} </td>
         <td>${t["Task Escalation Time"] || ""}</td>
